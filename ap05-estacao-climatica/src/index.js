@@ -1,21 +1,47 @@
 import { createRoot } from "react-dom/client";
 import React from "react";
-
+import { EstacaoClimatica } from './EstacaoClimatica'
 // componente de classe = classe que herda de Component
 // entre as várias funções herdadas de Component, a função render() serve
 // para retornar o JSX do componente de classe
 class App extends React.Component {
   // definimos o estado inicial do componente
-  constructor(props) {
-    super(props);
-    this.state = {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     latitude: null,
+  //     longitude: null,
+  //     estacao: null,
+  //     data: null,
+  //     icone: null,
+  //     mensagemDeErro: null,
+  //   };
+  //   console.log("construtor");
+  // }
+
+  state = {
       latitude: null,
       longitude: null,
       estacao: null,
       data: null,
       icone: null,
       mensagemDeErro: null,
-    };
+  }
+
+  // executa após a primeira vez que <App/> é incluído na árvore DOM
+  componentDidMount() {
+    console.log("componentDidMount");
+    this.obterLocalizacao();
+  }
+
+  // executa sempre que o estado do componente é alterado, depois do render()
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
+  }
+
+  // execute logo antes do componente ser removido da árvore DOM
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
   }
 
   obterEstacao = (data, latitude) => {
@@ -74,46 +100,20 @@ class App extends React.Component {
   };
 
   render() {
-    console.log(this.state);
+    console.log("render");
     return (
       <div className="container mt-2">
         <div className="row justify-content-center">
           <div className="col-md-8">
-            {/*um cartão Bootstrap*/}
-            <div className="card">
-              {/*o corpo do cartão*/}
-              <div className="card-body">
-                {/*centralizar verticalmente e margem abaixo*/}
-                <div
-                  className="d-flex align-items-center border rounded mb-2"
-                  style={{ height: "6rem" }}
-                >
-                  {/*icone obtido do estado do componente*/}
-                  <i className={`fas fa-5x ${this.state.icone}`}></i>
-                  {/*largura 75%, margem à esquerda (start), fs aumenta a fonte*/}
-                  <p className="w-75 ms-3 text-center fs-1">
-                    {this.state.estacao}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-center">
-                    {/*renderização condicional*/}
-                    {this.state.latitude
-                      ? `Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data:${this.state.data}`
-                      : this.state.mensagemDeErro
-                        ? `${this.state.mensagemDeErro}`
-                        : "Clique no botão para saber a sua estação climática."}
-                  </p>
-                </div>
-                {/*botão para encontrar a estação climatica*/}
-                <button
-                  onClick={this.obterLocalizacao}
-                  className="btn btn-outline-primary w-100 mt-2"
-                >
-                  Qual a minha estação?
-                </button>
-              </div>
-            </div>
+              <EstacaoClimatica
+                icone={this.state.icone}
+                estacao={this.state.estacao}
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                data={this.state.data}
+                mensagemDeErro={this.state.mensagemDeErro}
+                obterLocalizacao={this.obterLocalizacao}
+              />
           </div>
         </div>
       </div>
@@ -124,4 +124,5 @@ class App extends React.Component {
 // raiz da aplicação = elemento da árvore DOM (index.html) onde será
 // renderizado o código JSX
 // o método render() renderiza o JSX na raiz da aplicação
-createRoot(document.getElementById("root")).render(<App />);
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);

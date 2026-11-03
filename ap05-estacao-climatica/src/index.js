@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client";
 import React from "react";
-import { EstacaoClimatica } from './EstacaoClimatica'
+import { EstacaoClimatica } from "./EstacaoClimatica";
+import { Loading } from "./Loading";
+
 // componente de classe = classe que herda de Component
 // entre as várias funções herdadas de Component, a função render() serve
 // para retornar o JSX do componente de classe
@@ -20,13 +22,13 @@ class App extends React.Component {
   // }
 
   state = {
-      latitude: null,
-      longitude: null,
-      estacao: null,
-      data: null,
-      icone: null,
-      mensagemDeErro: null,
-  }
+    latitude: null,
+    longitude: null,
+    estacao: null,
+    data: null,
+    icone: null,
+    mensagemDeErro: null,
+  };
 
   // executa após a primeira vez que <App/> é incluído na árvore DOM
   componentDidMount() {
@@ -105,15 +107,25 @@ class App extends React.Component {
       <div className="container mt-2">
         <div className="row justify-content-center">
           <div className="col-md-8">
+            {!this.state.latitude && !this.state.mensagemDeErro ? (
+              <Loading mensagem="Por favor, responda a solicitação de localização" />
+            ) : this.state.mensagemDeErro ? (
+              // se existe mensagem de erro
+              <p className="border rounded p-2 fs-1 text-center">
+                É preciso dar permissão para acesso à localização. Atualize a
+                página e tente de novo, ajustando a configuração no seu
+                navegador.
+              </p>
+            ) : (
+              // se não existe mensagem de erro
               <EstacaoClimatica
                 icone={this.state.icone}
-                estacao={this.state.estacao}
                 latitude={this.state.latitude}
                 longitude={this.state.longitude}
-                data={this.state.data}
-                mensagemDeErro={this.state.mensagemDeErro}
+                estacao={this.state.estacao}
                 obterLocalizacao={this.obterLocalizacao}
               />
+            )}
           </div>
         </div>
       </div>

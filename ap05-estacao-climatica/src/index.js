@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client";
 import React from "react";
 import { EstacaoClimatica } from './EstacaoClimatica'
+import { Loading } from './Loading'
+
 // componente de classe = classe que herda de Component
 // entre as várias funções herdadas de Component, a função render() serve
 // para retornar o JSX do componente de classe
@@ -105,15 +107,27 @@ class App extends React.Component {
       <div className="container mt-2">
         <div className="row justify-content-center">
           <div className="col-md-8">
-              <EstacaoClimatica
-                icone={this.state.icone}
-                estacao={this.state.estacao}
-                latitude={this.state.latitude}
-                longitude={this.state.longitude}
-                data={this.state.data}
-                mensagemDeErro={this.state.mensagemDeErro}
-                obterLocalizacao={this.obterLocalizacao}
-              />
+
+              {
+                (!this.state.latitude && !this.state.mensagemDeErro) ?
+                  <Loading mensagem="Por favor, responda à solicitação de localização"/>
+                :
+                this.state.mensagemDeErro ?
+                  <p className="border rounded p-2 fs-1 text-center">
+                    É preciso dar permissão para acesso à localização.
+                    Atualize a página e tende de novo, ajustando 
+                    a configuração no seu navegador.
+                  </p>
+                :
+                  <EstacaoClimatica 
+                    icone={this.state.icone}
+                    estacao={this.state.estacao}
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+                    obterLocalizacao={this.obterLocalizacao}
+                  />
+              }
+
           </div>
         </div>
       </div>

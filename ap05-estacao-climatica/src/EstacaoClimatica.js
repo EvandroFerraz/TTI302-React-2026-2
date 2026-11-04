@@ -1,7 +1,34 @@
 import React from "react";
 
 export class EstacaoClimatica extends React.Component {
+
+  timer = null
+  state = {
+    data: null
+  }
+
+  // executa a primeira vez que o componente EstacaoClimatica for renderizado na DOM
+  // atualizar o estado do componente com o horário atualizado a cada segundo
+  componentDidMount(){
+    console.log("componentDidMount")
+    this.timer = setInterval(() => {
+      this.setState({data: new Date().toLocaleTimeString()})
+    },1000)
+  }
+
+  // executa logo antes do componente EstacaoClimatica ser removido da DOM
+  componentWillUnmount(){
+    console.log('componentWillUnmount')
+    clearInterval(this.timer) // timer volta a ser nulo
+  }
+
+  // executa toda vez que o estado do EstacaoClimatica é alterado, depois do render()
+  componentDidUpdate(){
+    console.log('componenteDidUpdate')
+  }
+
   render() {
+    console.log('render')
     return (
       /*um cartão Bootstrap*/
       <div className="card">
@@ -20,11 +47,14 @@ export class EstacaoClimatica extends React.Component {
           <div>
             <p className="text-center">
               {/*renderização condicional*/}
-              {this.props.latitude
-                ? `Coordenadas: ${this.props.latitude}, ${this.props.longitude}. Data:${this.props.data}`
-                : this.props.mensagemDeErro
-                  ? `${this.props.mensagemDeErro}`
-                  : "Clique no botão para saber a sua estação climática."}
+              {
+                this.props.latitude ?
+                // se condição é verdadeira
+                `Coordenadas: ${this.props.latitude}, ${this.props.longitude}. Timer: ${this.state.data}`
+                :
+                // se a condição é falsa
+                "Clique no botão para saber a sua estação climática"
+              }
             </p>
           </div>
           {/*botão para encontrar a estação climatica*/}
